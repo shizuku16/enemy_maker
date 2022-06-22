@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>敵キャラコマ作成</title>
+    <title>敵のキャラコマ作成ツール</title>
     <style>
         td,th{border:solid 2px #575757;padding:1px 10px;text-align:center;}
         table{border-collapse:collapse;}
@@ -99,6 +99,7 @@
             }
             
             writeString+="      </data>\n    </data>\n  </data>\n  <chat-palette dicebot=\"SwordWorld2.5\">\n"
+            writeString+="2d6+"+mind+"　【精神抵抗】\n2d6+"+life+"　【生命抵抗】\n\n"
             
             for(j=1;j<=i;j++){
                 var bui=document.getElementById("bui"+j).value
