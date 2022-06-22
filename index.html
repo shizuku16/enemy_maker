@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,6 +13,7 @@
     <script type="text/javascript" src="sha256.js"></script>
     <script type="text/JavaScript">
         var i=1
+        var attack=[0,1]
 
         function previewImage(obj){
             var fileReader = new FileReader();
@@ -24,14 +25,35 @@
 
         function add(){
             i++
-            var adding="<tr id=\"r"+i+"\"><td><input type=\"text\" style=\"width:60px;\" id=\"bui"+i+"\"></td><td><input type=\"number\" style=\"width:40px;\" id=\"hp"+i+"\"></td><td><input type=\"number\" style=\"width:40px;\" id=\"mp"+i+"\"></td><td><input type=\"number\" style=\"width:40px;\" id=\"hit"+i+"\"></td><td><input type=\"text\" style=\"width:100px;\" id=\"damage"+i+"\"><td><input type=\"number\" style=\"width:40px;\" id=\"kaihi"+i+"\"></td></tr>"
+            var adding="<tr id=\"r"+i+"\"><td><input type=\"text\" style=\"width:60px;\" id=\"bui"+i+"\"></td><td><input type=\"number\" style=\"width:40px;\" id=\"hp"+i+"\"></td><td><input type=\"number\" style=\"width:40px;\" id=\"mp"+i+"\"></td><td id=\"h"+i+"\"><input type=\"number\" style=\"width:40px;\" id=\"hit"+i+"1\"></td><td id=\"d"+i+"\"><input type=\"text\" style=\"width:100px;\" id=\"damage"+i+"1\"><td><input type=\"number\" style=\"width:40px;\" id=\"kaihi"+i+"\"></td><td><button onclick=\"attackadd("+i+")\">＋</button><br><button onclick=\"attackreduce("+i+")\">－</button></td></tr>"
             var table=document.getElementById("status")
             table.insertAdjacentHTML("beforeend",adding)
+            attack.push(1)
         }
         function reduce() {
             var r=document.getElementById("r"+i)
             r.remove()
             i--
+            attack.pop()
+        }
+
+        function attackadd(k) {
+            attack[k]=attack[k]+1
+            var h=document.getElementById("h"+k)
+            var d=document.getElementById("d"+k)
+            var addh="<div><input type=\"number\" style=\"width:40px;\" id=\"hit"+String(i)+attack[k]+"\"><\div>"
+            var addd="<div><input type=\"text\" style=\"width:100px;\" id=\"damage"+String(i)+attack[k]+"\"><\div>")
+
+            h.insertAdjacentHTML("beforeend",addh)
+            d.insertAdjacentHTML("beforeend",addd)
+            console.log(attack)
+        }
+        function attackreduce(k) {
+            var h=document.getElementById("hit"+String(k)+attack[k])
+            var d=document.getElementById("damage"+String(k)+attack[k])
+            h.remove()
+            d.remove()
+            attack[k]=attack[k]-1
         }
 
         async function load() {
@@ -55,16 +77,25 @@
             var life=document.getElementById("life").value
 
             var writeString="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<character location.name=\"table\" posZ=\"0\" isLock=\"false\" rotate=\"0\" roll=\"0\" hideInventory=\"false\" nonTalkFlag=\"false\" overViewWidth=\"270\" overViewMaxHeight=\"250\" specifyKomaImageFlag=\"false\" komaImageHeignt=\"100\" chatColorCode.0=\"#000000\" chatColorCode.1=\"#FF0000\" chatColorCode.2=\"#0099FF\" syncDummyCounter=\"0\">\n  <data name=\"character\">\n    <data name=\"image\">\n      <data type=\"image\" name=\"imageIdentifier\">"+image+"</data>\n    </data>\n    <data name=\"common\">\n      <data name=\"name\">"+name+"</data>\n      <data name=\"size\">1</data>\n    </data>\n    <data name=\"detail\">\n      <data name=\"リソース\">\n"
-            for(var j=1;j<=i;j++){
-                var bui=document.getElementById("bui"+j).value
-                if(bui=="")bui="部位"+j
-                var hp=document.getElementById("hp"+j).value
-                var mp=document.getElementById("mp"+j).value
 
-                writeString+="        <data name=\""+bui+"\">\n"
+            if(i==1){
+                var hp=document.getElementById("hp1").value
+                var mp=document.getElementById("mp1").value
                 if(hp!="")writeString+="          <data name=\"HP\" type=\"numberResource\" currentValue=\""+hp+"\">"+hp+"</data>\n"
                 if(mp!="")writeString+="          <data name=\"MP\" type=\"numberResource\" currentValue=\""+mp+"\">"+mp+"</data>\n"
-                writeString+="        </data>\n"
+            }
+            else{
+                for(var j=1;j<=i;j++){
+                    var bui=document.getElementById("bui"+j).value
+                    if(bui=="")bui="部位"+j
+                    var hp=document.getElementById("hp"+j).value
+                    var mp=document.getElementById("mp"+j).value
+
+                    writeString+="        <data name=\""+bui+"\">\n"
+                    if(hp!="")writeString+="          <data name=\"HP\" type=\"numberResource\" currentValue=\""+hp+"\">"+hp+"</data>\n"
+                    if(mp!="")writeString+="          <data name=\"MP\" type=\"numberResource\" currentValue=\""+mp+"\">"+mp+"</data>\n"
+                    writeString+="        </data>\n"
+                }
             }
             
             writeString+="      </data>\n    </data>\n  </data>\n  <chat-palette dicebot=\"SwordWorld2.5\">\n"
@@ -72,15 +103,17 @@
             for(j=1;j<=i;j++){
                 var bui=document.getElementById("bui"+j).value
                 if(bui=="")bui="部位"+j
-                var hit=document.getElementById("hit"+j).value
-                var damage=document.getElementById("damage"+j).value
-                var kaihi=document.getElementById("kaihi"+j).value
-                writeString+="["+bui+"]\n"
-                if(hit!="")writeString+="2d6+"+hit+"　【命中・魔法行使】\n"
-                if(damage!=""){
-                    if(damage.match(/^k/i))writeString+=damage+"　【ダメージ】\n"
-                    if(damage.match(/^\d+$/i))writeString+="2d6+"+damage+"　【ダメージ】\n"
+                if(i!=1)writeString+="["+bui+"]\n"
+                for(m=1;m<=attack[j];m++){
+                    var hit=document.getElementById("hit"+String(j)+m).value
+                    var damage=document.getElementById("damage"+String(j)+m).value
+                    if(hit!="")writeString+="2d6+"+hit+"　【命中・魔法行使】\n"
+                    if(damage!=""){
+                        if(damage.match(/^k/i))writeString+=damage+"　【ダメージ】\n"
+                        if(damage.match(/^\d+$/i))writeString+="2d6+"+damage+"　【ダメージ】\n"
+                    }
                 }
+                var kaihi=document.getElementById("kaihi"+j).value
                 if(kaihi!="")writeString+="2d6+"+kaihi+"　【回避】\n\n"
             }
             writeString+="</chat-palette>\n</character>"
@@ -116,8 +149,8 @@
     　　　画像：<input type="file" id="image" accept="image/png,image/jpeg,image/jpg" onchange="previewImage(this)"><br>
     <br>
     <table id="status">
-        <tr><td>部位名</td><td>HP</td><td>MP</td><td>命中<br>魔法行使</td><td>ダメージ</td><td>回避</td></tr>
-        <tr id="r1"><td><input type="text" style="width:60px;" id="bui1"></td><td><input type="number" style="width:40px;" id="hp1"></td><td><input type="number" style="width:40px;" id="mp1"></td><td><input type="number" style="width:40px;" id="hit1"></td><td><input type="text" style="width:100px;" id="damage1"><td><input type="number" style="width:40px;" id="kaihi1"></td></tr>
+        <tr><td>部位名</td><td>HP</td><td>MP</td><td>命中<br>魔法行使</td><td>ダメージ</td><td>回避</td><td>攻撃手段の追加</td></tr>
+        <tr id="r1"><td><input type="text" style="width:60px;" id="bui1"></td><td><input type="number" style="width:40px;" id="hp1"></td><td><input type="number" style="width:40px;" id="mp1"></td><td id="h1"><input type="number" style="width:40px;" id="hit11"></td><td id="d1"><input type="text" style="width:100px;" id="damage11"><td><input type="number" style="width:40px;" id="kaihi1"></td><td><button onclick="attackadd(1)">＋</button><br><button onclick="attackreduce(1)">－</button></td></tr>
     </table>
     <button onclick="add()">増やす</button><button onclick="reduce()">減らす</button><br><br><br>
     <button onclick="load()">キャラコマを作成する</button><br><br>
