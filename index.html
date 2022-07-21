@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>敵のキャラコマ作成ツール</title>
+    <title>enemy maker</title>
     <style>
         td,th{border:solid 2px #575757;padding:1px 10px;text-align:center;}
         table{border-collapse:collapse;}
@@ -25,7 +25,7 @@
 
         function add(){
             i++
-            var adding="<tr id=\"r"+i+"\"><td><input type=\"text\" style=\"width:60px;\" id=\"bui"+i+"\"></td><td><input type=\"number\" style=\"width:40px;\" id=\"hp"+i+"\"></td><td><input type=\"number\" style=\"width:40px;\" id=\"mp"+i+"\"></td><td id=\"h"+i+"\"><input type=\"number\" style=\"width:40px;\" id=\"hit"+i+"1\"></td><td id=\"n"+i+"\"><input type=\"text\" style=\"width:90px;\" id=\"attackname"+i+"1\"></td><td id=\"d"+i+"\"><input type=\"text\" style=\"width:100px;\" id=\"damage"+i+"1\"><td><input type=\"number\" style=\"width:40px;\" id=\"kaihi"+i+"\"></td><td><button onclick=\"attackadd("+i+")\">＋</button><br><button onclick=\"attackreduce("+i+")\">－</button></td></tr>"
+            var adding="<tr id=\"r"+i+"\"><td><input type=\"text\" style=\"width:60px;\" id=\"bui"+i+"\"></td><td><input type=\"number\" style=\"width:40px;\" id=\"hp"+i+"\"></td><td><input type=\"number\" style=\"width:40px;\" id=\"mp"+i+"\"></td><td><input type=\"number\" style=\"width:40px;\" id=\"kaihi"+i+"\"></td><td><input type=\"number\" style=\"width:40px;\" id=\"protection"+i+"\"></td><td id=\"h"+i+"\"><input type=\"number\" style=\"width:40px;\" id=\"hit"+i+"1\"></td><td id=\"n"+i+"\"><input type=\"text\" style=\"width:90px;\" id=\"attackname"+i+"1\"></td><td id=\"d"+i+"\"><input type=\"text\" style=\"width:100px;\" id=\"damage"+i+"1\"><td><button onclick=\"attackadd("+i+")\">＋</button><br><button onclick=\"attackreduce("+i+")\">－</button></td></tr>"
             var table=document.getElementById("status")
             table.insertAdjacentHTML("beforeend",adding)
             attack.push(1)
@@ -49,7 +49,6 @@
             h.insertAdjacentHTML("beforeend",addh)
             d.insertAdjacentHTML("beforeend",addd)
             n.insertAdjacentHTML("beforeend",addn)
-            console.log(attack)
         }
         function attackreduce(k) {
             var h=document.getElementById("hit"+String(k)+attack[k])
@@ -86,6 +85,7 @@
             if(i==1){
                 var hp=document.getElementById("hp1").value
                 var mp=document.getElementById("mp1").value
+                var protectoin=document.getElementById("protection1").value
                 if(hp!="")writeString+="          <data name=\"HP\" type=\"numberResource\" currentValue=\""+hp+"\">"+hp+"</data>\n"
                 if(mp!="")writeString+="          <data name=\"MP\" type=\"numberResource\" currentValue=\""+mp+"\">"+mp+"</data>\n"
             }
@@ -95,10 +95,12 @@
                     if(bui=="")bui="部位"+j
                     var hp=document.getElementById("hp"+j).value
                     var mp=document.getElementById("mp"+j).value
+                    var protection=document.getElementById("protection"+j).value
 
                     writeString+="        <data name=\""+bui+"\">\n"
                     if(hp!="")writeString+="          <data name=\"HP\" type=\"numberResource\" currentValue=\""+hp+"\">"+hp+"</data>\n"
                     if(mp!="")writeString+="          <data name=\"MP\" type=\"numberResource\" currentValue=\""+mp+"\">"+mp+"</data>\n"
+                    if(protection!="")writeString+="          <data name=\"防護点\" type=\"numberResource\" currentValue=\""+protection+"\">"+protection+"</data>\n"
                     writeString+="        </data>\n"
                 }
             }
@@ -118,8 +120,8 @@
                     if(attackname!="")writeString+="　【"+attackname+"行使】\n"
                     else writeString+="　【命中・魔法行使】\n"
                     if(damage!=""){
-                        if(damage.match(/^k/i))writeString+=damage+"　【"
                         if(damage.match(/^\d+$/i))writeString+="2d6+"+damage+"　【"
+                        else writeString+=damage+"　【"
                         if(attackname!="")writeString+=attackname
                         writeString+="ダメージ】\n"
                     }
@@ -160,8 +162,8 @@
     　　　画像：<input type="file" id="image" accept="image/png,image/jpeg,image/jpg" onchange="previewImage(this)"><br>
     <br>
     <table id="status">
-        <tr><td>部位名</td><td>HP</td><td>MP</td><td>命中<br>魔法行使</td><td>攻撃名</td><td>ダメージ</td><td>回避</td><td>攻撃手段の追加</td></tr>
-        <tr id="r1"><td><input type="text" style="width:60px;" id="bui1"></td><td><input type="number" style="width:40px;" id="hp1"></td><td><input type="number" style="width:40px;" id="mp1"></td><td id="h1"><input type="number" style="width:40px;" id="hit11"></td><td id="n1"><input type="text" style="width:90px;" id="attackname11"></td><td id="d1"><input type="text" style="width:100px;" id="damage11"><td><input type="number" style="width:40px;" id="kaihi1"></td><td><button onclick="attackadd(1)">＋</button><br><button onclick="attackreduce(1)">－</button></td></tr>
+        <tr><td>部位名</td><td>HP</td><td>MP</td><td>回避</td><td>防護点</td><td>命中<br>魔法行使</td><td>攻撃名</td><td>ダメージ</td><td>攻撃手段の追加</td></tr>
+        <tr id="r1"><td><input type="text" style="width:60px;" id="bui1"></td><td><input type="number" style="width:40px;" id="hp1"></td><td><input type="number" style="width:40px;" id="mp1"></td><td><input type="number" style="width:40px;" id="kaihi1"></td><td><input type="number" style="width:40px;" id="protection1"></td><td id="h1"><input type="number" style="width:40px;" id="hit11"></td><td id="n1"><input type="text" style="width:90px;" id="attackname11"></td><td id="d1"><input type="text" style="width:100px;" id="damage11"><td><button onclick="attackadd(1)">＋</button><br><button onclick="attackreduce(1)">－</button></td></tr>
     </table>
     <button onclick="add()">増やす</button><button onclick="reduce()">減らす</button><br><br><br>
     <button onclick="load()">キャラコマを作成する</button><br><br>
