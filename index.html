@@ -111,7 +111,7 @@
                 let bui=document.getElementById("bui"+j).value||"部位"+j
                 if(i==1) bui=""
                 else writeString+="["+bui+"]\n"
-                writeString+=`:HP(${bui})+{防護点({bui})}-　【物理ダメージ】\n:HP(${bui})-　【魔法ダメージ】\n:MP(${bui})-　【MP減少】\n\n`
+                writeString+=`:HP(${bui})+{防護点(${bui})}-　【物理ダメージ】\n:HP(${bui})-　【魔法ダメージ】\n:MP(${bui})-　【MP減少】\n\n`
                 for(m=1;m<=attack[j];m++){
                     let hit=document.getElementById("hit"+String(j)+m).value
                     let damage=document.getElementById("damage"+String(j)+m).value
