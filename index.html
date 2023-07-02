@@ -25,7 +25,7 @@
 
         function add(){
             i++
-            var adding="<tr id=\"r"+i+"\"><td><input type=\"text\" style=\"width:60px;\" id=\"bui"+i+"\"></td><td><input type=\"number\" style=\"width:40px;\" id=\"hp"+i+"\"></td><td><input type=\"number\" style=\"width:40px;\" id=\"mp"+i+"\"></td><td><input type=\"number\" style=\"width:40px;\" id=\"kaihi"+i+"\"></td><td><input type=\"number\" style=\"width:40px;\" id=\"protection"+i+"\"></td><td id=\"h"+i+"\"><input type=\"number\" style=\"width:40px;\" id=\"hit"+i+"1\"></td><td id=\"n"+i+"\"><input type=\"text\" style=\"width:90px;\" id=\"attackname"+i+"1\"></td><td id=\"d"+i+"\"><input type=\"text\" style=\"width:100px;\" id=\"damage"+i+"1\"><td><button onclick=\"attackadd("+i+")\">＋</button><br><button onclick=\"attackreduce("+i+")\">－</button></td></tr>"
+            var adding=`<tr id="r${i}"><td><input type="text" style="width:60px;" id="bui${i}"></td><td><input type="number" style="width:40px;" id="hp${i}"></td><td><input type="number" style="width:40px;" id="mp${i}"></td><td><input type="number" style="width:40px;" id="kaihi${i}"></td><td><input type="number" style="width:40px;" id="protection${i}"></td><td id="h${i}"><input type="number" style="width:40px;" id="hit${i}1"></td><td id="n${i}"><input type="text" style="width:90px;" id="attackname${i}1"></td><td id="d${i}"><input type="text" style="width:100px;" id="damage${i}1"><td><button onclick="attackadd(${i})">＋</button><br><button onclick="attackreduce(${i})">－</button></td></tr>`
             var table=document.getElementById("status")
             table.insertAdjacentHTML("beforeend",adding)
             attack.push(1)
@@ -91,31 +91,31 @@
             }
             else{
                 for(var j=1;j<=i;j++){
-                    var bui=document.getElementById("bui"+j).value
-                    if(bui=="")bui="部位"+j
+                    var bui=document.getElementById("bui"+j).value||"部位"+j
                     var hp=document.getElementById("hp"+j).value
                     var mp=document.getElementById("mp"+j).value
                     var protection=document.getElementById("protection"+j).value
 
                     writeString+="        <data name=\""+bui+"\">\n"
-                    if(hp!="")writeString+="          <data name=\"HP\" type=\"numberResource\" currentValue=\""+hp+"\">"+hp+"</data>\n"
-                    if(mp!="")writeString+="          <data name=\"MP\" type=\"numberResource\" currentValue=\""+mp+"\">"+mp+"</data>\n"
-                    if(protection!="")writeString+="          <data name=\"防護点\" type=\"numberResource\" currentValue=\""+protection+"\">"+protection+"</data>\n"
+                    if(hp!="")writeString+=`          <data name="HP(${bui})" type="numberResource" currentValue="${hp}">${hp}</data>\n`
+                    if(mp!="")writeString+=`          <data name="HP(${bui})" type="numberResource" currentValue="${mp}">${mp}</data>\n`
+                    if(protection!="")writeString+=`          <data name="防護点(${bui})" type="numberResource" currentValue="${protection}">${protection}</data>\n`
                     writeString+="        </data>\n"
                 }
             }
             
             writeString+="      </data>\n    </data>\n  </data>\n  <chat-palette dicebot=\"SwordWorld2.5\">\n"
-            writeString+="2d6+"+mind+"　【精神抵抗】\n2d6+"+life+"　【生命抵抗】\n\n"
+            writeString+=`2d6+${mind}　【精神抵抗】\n2d6+${life}　【生命抵抗】\n\n`
             
             for(j=1;j<=i;j++){
-                var bui=document.getElementById("bui"+j).value
-                if(bui=="")bui="部位"+j
-                if(i!=1)writeString+="["+bui+"]\n"
+                let bui=document.getElementById("bui"+j).value||"部位"+j
+                if(i==1) bui=""
+                else writeString+="["+bui+"]\n"
+                writeString+=`:HP(${bui})+{防護点({bui})}-　【物理ダメージ】\n:HP(${bui})-　【魔法ダメージ】\n:MP(${bui})-　【MP減少】\n\n`
                 for(m=1;m<=attack[j];m++){
-                    var hit=document.getElementById("hit"+String(j)+m).value
-                    var damage=document.getElementById("damage"+String(j)+m).value
-                    var attackname=document.getElementById("attackname"+String(j)+m).value
+                    let hit=document.getElementById("hit"+String(j)+m).value
+                    let damage=document.getElementById("damage"+String(j)+m).value
+                    let attackname=document.getElementById("attackname"+String(j)+m).value
                     if(hit!="")writeString+="2d6+"+hit
                     if(attackname!="")writeString+="　【"+attackname+"行使】\n"
                     else writeString+="　【命中・魔法行使】\n"
@@ -126,7 +126,7 @@
                         writeString+="ダメージ】\n"
                     }
                 }
-                var kaihi=document.getElementById("kaihi"+j).value
+                let kaihi=document.getElementById("kaihi"+j).value
                 if(kaihi!="")writeString+="2d6+"+kaihi+"　【回避】\n\n"
             }
             writeString+="</chat-palette>\n</character>"
