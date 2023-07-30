@@ -98,7 +98,7 @@
 
                     writeString+="        <data name=\""+bui+"\">\n"
                     if(hp!="")writeString+=`          <data name="HP(${bui})" type="numberResource" currentValue="${hp}">${hp}</data>\n`
-                    if(mp!="")writeString+=`          <data name="HP(${bui})" type="numberResource" currentValue="${mp}">${mp}</data>\n`
+                    if(mp!="")writeString+=`          <data name="MP(${bui})" type="numberResource" currentValue="${mp}">${mp}</data>\n`
                     if(protection!="")writeString+=`          <data name="防護点(${bui})" type="numberResource" currentValue="${protection}">${protection}</data>\n`
                     writeString+="        </data>\n"
                 }
@@ -129,8 +129,8 @@
                 let kaihi=document.getElementById("kaihi"+j).value
                 if(kaihi!="")writeString+="2d6+"+kaihi+"　【回避】\n\n"
             }
-            writeString+="</chat-palette>\n</character>"
-            console.log(writeString)
+            writeString+="</chat-palette>\n</character>";
+            writeString=writeString.replace(/\(\)/g,"");
             download(writeString)
         }
 
