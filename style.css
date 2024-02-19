@@ -1,0 +1,7 @@
+input[type="number"]{
+    width: 2.8rem;
+}
+
+td.head{
+    background-color: hsla(212, 100%, 88%, 0.881);
+}
